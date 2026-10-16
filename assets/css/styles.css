@@ -1443,3 +1443,28 @@ fieldset.mc legend {
 .lsec.folded > h2 {
   margin-bottom: 0.2em;
 }
+.fold-st {
+  margin-left: auto;
+  flex: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.fold-st.ok {
+  color: var(--ok);
+  border-color: currentColor;
+}
+.fold-st + .fold-ico {
+  margin-left: 0;
+}
+.fold-all {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 8px 0 -4px;
+}

@@ -34,11 +34,24 @@
       se guarda (por página) para conservarlo al cerrar el navegador. */
   function folds(root, page) {
     const store = EM.store.data.fold || (EM.store.data.fold = {});
+    const all = [];
     root.querySelectorAll('section.lsec, section.stage').forEach((s, i) => {
       const h2 = s.querySelector(':scope > h2');
       if (!h2) return;
       const key = page + '|' + (s.id || h2.textContent.trim() || i);
-      const btn = h('button', { type: 'button', class: 'fold-btn', 'aria-expanded': 'true' }, ...h2.childNodes, h('span', { class: 'fold-ico', 'aria-hidden': 'true' }, '▾'));
+      // Estado de los ejercicios de la sección (comprobados / total), visible aunque esté recogida.
+      const exIds = [...s.querySelectorAll('section.ex[id^="ex-"]')].map((x) => x.id.slice(3));
+      const badge = exIds.length ? h('span', { class: 'fold-st' }) : null;
+      const upd = () => {
+        if (!badge) return;
+        const n = exIds.filter((id) => EM.store.data.ex[id]).length;
+        badge.textContent = (n === exIds.length ? '✔ ' : '') + n + '/' + exIds.length;
+        badge.classList.toggle('ok', n === exIds.length);
+        badge.title = `Ejercicios comprobados: ${n} de ${exIds.length}`;
+      };
+      upd();
+      s.addEventListener('ex-scored', upd);
+      const btn = h('button', { type: 'button', class: 'fold-btn', 'aria-expanded': 'true' }, ...h2.childNodes, badge, h('span', { class: 'fold-ico', 'aria-hidden': 'true' }, '▾'));
       h2.replaceChildren(btn);
       const set = (folded, save) => {
         s.classList.toggle('folded', folded);
@@ -51,7 +64,18 @@
       s._unfold = () => s.classList.contains('folded') && set(false, true);
       btn.onclick = () => set(!s.classList.contains('folded'), true);
       if (store[key]) set(true, false);
+      all.push({ s, set });
     });
+    // Desplegar / recoger todo en páginas con varias secciones.
+    if (all.length >= 3) {
+      const every = (folded) => () => all.forEach((x) => x.set(folded, true));
+      all[0].s.before(
+        h('div', { class: 'fold-all' },
+          h('button', { type: 'button', class: 'btn btn-sm btn-ghost', onclick: every(false) }, '▾ Desplegar todo'),
+          h('button', { type: 'button', class: 'btn btn-sm btn-ghost', onclick: every(true) }, '▸ Recoger todo')
+        )
+      );
+    }
   }
 
   EM.route = async function route() {
