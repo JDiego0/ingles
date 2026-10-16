@@ -175,6 +175,14 @@
     root.append(h('p', {}, m.summary));
 
     // Secuencia semanal
+    // Avance parcial de una lección empezada (ejercicios comprobados).
+    const stepPartial = (s, mod) => {
+      if (s.type !== 'lesson') return '';
+      const L = mod.lessons[s.n - 1];
+      const sc = L && L._blocks ? EM.blockScores(L._blocks) : null;
+      if (sc && sc.attempted) return `◐ en curso · ${sc.attempted}/${sc.total} ejercicios`;
+      return S().data.lessons[s.id] && S().data.lessons[s.id].visited ? '◐ empezada' : '';
+    };
     const steps = EM.prog.steps(meta);
     const ol = h('ol', { class: 'steps' });
     steps.forEach((s, i) => {
@@ -186,7 +194,7 @@
         h('li', { class: s.done ? 'done' : '' },
           h('span', { class: 'step-day' }, 'Día ' + (i + 1)),
           ms.unlocked ? h('a', { href: s.href }, label) : h('span', {}, label),
-          h('span', { class: 'step-st' }, s.done ? '✔ hecho' : 'pendiente')
+          h('span', { class: 'step-st' }, s.done ? '✔ hecho' : stepPartial(s, m) || 'pendiente')
         )
       );
     });

@@ -269,8 +269,20 @@
 
     // Finalización
     const done = h('section', { class: 'card complete', 'aria-live': 'polite' });
+    // Se toma el registro en el momento (no la referencia inicial), por si los
+    // datos se recargaron desde otra pestaña o desde una copia importada.
+    const markDone = () => {
+      const r = S().data.lessons[lid] || (S().data.lessons[lid] = {});
+      r.completed = U.today();
+      (L.chunks || []).forEach((v) => EM.srs.add(v, { src: mid, lvl: m.cefr }));
+      S().logActivity('lesson', lid);
+      S().saveNow();
+      U.toast('¡Lección completada! Sus expresiones están en tu repaso.');
+    };
     const renderDone = () => {
       const st = completionState(L);
+      // Al cumplir los requisitos, la lección queda marcada automáticamente.
+      if (st.ok && !EM.prog.lessonDone(lid)) markDone();
       const isDone = EM.prog.lessonDone(lid);
       done.replaceChildren(
         h('h2', {}, isDone ? '✔ Lección completada' : 'Completar la lección'),
@@ -284,11 +296,7 @@
           : h('button', {
               class: 'btn btn-primary btn-lg', type: 'button', disabled: !st.ok,
               onclick: () => {
-                rec.completed = U.today();
-                (L.chunks || []).forEach((v) => EM.srs.add(v, { src: mid, lvl: m.cefr }));
-                S().logActivity('lesson', lid);
-                S().save();
-                U.toast('¡Lección completada! Sus expresiones están en tu repaso.');
+                markDone();
                 renderDone();
               },
             }, 'Marcar como completada'),
@@ -361,8 +369,9 @@
         isDone ? null : h('button', {
           class: 'btn btn-primary btn-lg', type: 'button', disabled: !spoke,
           onclick: () => {
-            S().data.lessons[id] = { completed: U.today() };
+            S().data.lessons[id] = { ...S().data.lessons[id], completed: U.today() };
             S().logActivity('lesson', id);
+            S().saveNow();
             U.toast('Consolidación completada.');
             render();
           },

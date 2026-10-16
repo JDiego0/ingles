@@ -70,6 +70,8 @@
 
   function init() {
     EM.store.load();
+    // Pide al navegador que no borre el progreso guardado para liberar espacio.
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => null);
     EM.applyTheme();
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', EM.applyTheme);
     EM.speech.init();

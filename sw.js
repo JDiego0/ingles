@@ -1,7 +1,7 @@
 /* Service worker: "red primero, caché como respaldo".
    Con conexión siempre obtiene la versión más reciente; sin conexión sirve lo
    que ya se haya visitado. Rutas relativas al alcance (compatibles con GitHub Pages). */
-const CACHE = 'english-mastery-v2';
+const CACHE = 'english-mastery-v3';
 const CORE = [
   './',
   'index.html',
