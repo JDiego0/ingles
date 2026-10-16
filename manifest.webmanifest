@@ -1,0 +1,13 @@
+{
+  "name": "English Mastery — Curso de inglés A1+ a C1",
+  "short_name": "English Mastery",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#1d5fbf",
+  "lang": "es",
+  "icons": [
+    { "src": "assets/images/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

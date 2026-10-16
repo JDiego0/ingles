@@ -1,0 +1,108 @@
+/* Ajustes por tamaño de pantalla. La base (styles.css) es para teléfonos. */
+
+/* Teléfonos muy estrechos (≤ 360 px) */
+@media (max-width: 360px) {
+  html {
+    font-size: calc(16px * var(--fs));
+  }
+  main {
+    padding: 10px 10px 20px;
+  }
+  .lsec,
+  .card {
+    padding: 10px;
+  }
+  .brand-t {
+    display: none;
+  }
+  .stat-n {
+    font-size: 1.2rem;
+  }
+  .grades .btn {
+    font-size: 0.78rem;
+  }
+}
+
+/* Teléfono en horizontal: barra inferior más baja */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --nav-h: 50px;
+    --top-h: 44px;
+  }
+  .bottomnav a {
+    flex-direction: row;
+    gap: 6px;
+  }
+  .toc {
+    position: static;
+  }
+}
+
+/* Tabletas */
+@media (min-width: 640px) {
+  .pairs {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mod-list {
+    grid-template-columns: 1fr 1fr;
+  }
+  .more-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .btn-lg {
+    width: auto;
+  }
+  .player-ctrls {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .rate-l {
+    margin-left: auto;
+  }
+}
+
+/* Escritorio: navegación lateral en lugar de barra inferior */
+@media (min-width: 960px) {
+  body {
+    padding-bottom: 24px;
+    padding-left: 220px;
+  }
+  .bottomnav {
+    display: none;
+  }
+  .sidenav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: fixed;
+    top: var(--top-h);
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    padding: 12px 10px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+  }
+  .sidenav a {
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    min-height: 44px;
+  }
+  .sidenav a.on {
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .topbar {
+    margin-left: -220px;
+  }
+  .toast {
+    bottom: 24px;
+  }
+  main {
+    padding: 16px 24px 32px;
+  }
+}

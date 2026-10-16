@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vista móvil de prueba</title>
+<style>
+  body { margin: 0; font-family: system-ui, sans-serif; background: #333; color: #fff; }
+  .bar { padding: 8px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .frames { display: flex; gap: 16px; padding: 8px; flex-wrap: wrap; align-items: flex-start; }
+  iframe { border: 0; background: #fff; border-radius: 16px; }
+  label { font-size: 13px; }
+</style>
+</head>
+<body>
+<!-- Herramienta de prueba: muestra el curso en marcos del tamaño de teléfonos Android.
+     Uso: servidor local → http://localhost:8000/tests/mobile.html#/lesson/m01/m01-l1 -->
+<div class="bar">
+  <label>Ruta <input id="r" value="#/" size="30"></label>
+  <button id="go">Abrir</button>
+  <span>360×780 · 412×915 · 780×360 (horizontal)</span>
+</div>
+<div class="frames">
+  <iframe id="f360" width="360" height="780" title="Teléfono 360 px"></iframe>
+  <iframe id="f412" width="412" height="915" title="Teléfono 412 px"></iframe>
+  <iframe id="fland" width="780" height="360" title="Teléfono horizontal"></iframe>
+</div>
+<script>
+  const r = document.getElementById('r');
+  if (location.hash) r.value = location.hash;
+  const go = () => ['f360', 'f412', 'fland'].forEach((id) => (document.getElementById(id).src = '../index.html' + r.value));
+  document.getElementById('go').onclick = go;
+  go();
+</script>
+</body>
+</html>

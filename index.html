@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>English Mastery</title>
+  <meta name="description" content="Curso integral de inglés de A1+ a B2, con ruta hacia C1, para hispanohablantes. 60 minutos al día.">
+  <meta name="theme-color" content="#1d5fbf">
+  <link rel="icon" href="assets/images/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <header class="topbar">
+    <a href="#/" class="brand" aria-label="English Mastery, inicio"><span class="logo" aria-hidden="true">EM</span><span class="brand-t">English Mastery</span></a>
+    <div id="timer-chip" class="timer-chip" hidden></div>
+  </header>
+
+  <nav class="sidenav" aria-label="Navegación principal">
+    <a href="#/" data-nav="">🏠 Inicio</a>
+    <a href="#/path" data-nav="path">🗺 Ruta</a>
+    <a href="#/review" data-nav="review">🔁 Repaso</a>
+    <a href="#/vocab" data-nav="vocab">📚 Vocabulario</a>
+    <a href="#/speaking" data-nav="speaking">🗣 Speaking</a>
+    <a href="#/pron" data-nav="pron">👄 Pronunciación</a>
+    <a href="#/errors" data-nav="errors">🩹 Mis errores</a>
+    <a href="#/diagnostic" data-nav="diagnostic">🧭 Diagnóstico</a>
+    <a href="#/history" data-nav="history">📅 Historial</a>
+    <a href="#/settings" data-nav="settings">⚙️ Ajustes</a>
+    <a href="#/help" data-nav="help">❓ Ayuda</a>
+  </nav>
+
+  <main id="main" tabindex="-1">
+    <noscript><p style="padding:1rem">Este curso necesita JavaScript activado.</p></noscript>
+    <p class="loading">Cargando…</p>
+  </main>
+
+  <nav class="bottomnav" aria-label="Navegación inferior">
+    <a href="#/" data-nav=""><span aria-hidden="true">🏠</span><span>Inicio</span></a>
+    <a href="#/path" data-nav="path"><span aria-hidden="true">🗺</span><span>Ruta</span></a>
+    <a href="#/review" data-nav="review"><span aria-hidden="true">🔁</span><span>Repaso</span></a>
+    <a href="#/vocab" data-nav="vocab"><span aria-hidden="true">📚</span><span>Vocab</span></a>
+    <a href="#/more" data-nav="more"><span aria-hidden="true">☰</span><span>Más</span></a>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="dlg" class="dlg" aria-label="Diálogo"></dialog>
+
+  <script defer src="assets/js/util.js"></script>
+  <script defer src="assets/js/storage.js"></script>
+  <script defer src="assets/js/speech.js"></script>
+  <script defer src="assets/js/srs.js"></script>
+  <script defer src="assets/js/progress.js"></script>
+  <script defer src="assets/js/components.js"></script>
+  <script defer src="assets/js/exercises.js"></script>
+  <script defer src="assets/js/timer.js"></script>
+  <script defer src="assets/js/views-home.js"></script>
+  <script defer src="assets/js/views-lesson.js"></script>
+  <script defer src="assets/js/views-assess.js"></script>
+  <script defer src="assets/js/views-tools.js"></script>
+  <script defer src="data/helpers.js"></script>
+  <script defer src="data/rubrics.js"></script>
+  <script defer src="data/curriculum.js"></script>
+  <script defer src="data/speaking-bank.js"></script>
+  <script defer src="data/pronunciation.js"></script>
+  <script defer src="data/help.js"></script>
+  <script defer src="data/assessments/diagnostic.js"></script>
+  <script defer src="assets/js/app.js"></script>
+</body>
+</html>
