@@ -44,6 +44,11 @@
         given: (v) => (v == null ? '(sin respuesta)' : it.o[v]),
         right: () => it.o[it.a],
         reset: () => fs.querySelectorAll('input').forEach((r) => (r.checked = false)),
+        raw: () => {
+          const r = fs.querySelector('input:checked');
+          return r ? +r.value : null;
+        },
+        set: (v) => fs.querySelectorAll('input').forEach((r) => (r.checked = v != null && +r.value === v)),
         lock: (on) => fs.querySelectorAll('input').forEach((r) => (r.disabled = on)),
       };
     } else if (it.t === 'gap') {
@@ -61,6 +66,8 @@
         given: (v) => v || '(vacío)',
         right: () => [].concat(it.a)[0],
         reset: () => (inp.value = ''),
+        raw: () => inp.value,
+        set: (v) => (inp.value = v || ''),
         lock: (on) => (inp.readOnly = on),
         text: true,
       };
@@ -97,6 +104,12 @@
         given: (v) => v || '(vacío)',
         right: () => [].concat(it.a)[0],
         reset: () => { picked.length = 0; render(); },
+        raw: () => picked.slice(),
+        set: (v) => {
+          picked.length = 0;
+          if (Array.isArray(v)) v.forEach((i) => i >= 0 && i < words.length && !picked.includes(i) && picked.push(i));
+          render();
+        },
         lock: (on) => { locked = on; render(); },
         text: true,
       };
@@ -116,6 +129,8 @@
         given: (v) => v || '(vacío)',
         right: () => [].concat(it.a)[0],
         reset: () => (inp.value = ''),
+        raw: () => inp.value,
+        set: (v) => (inp.value = v || ''),
         lock: (on) => (inp.readOnly = on),
         text: true,
       };
@@ -173,19 +188,22 @@
       result.textContent = `Resultado: ${state.filter(Boolean).length}/${state.length} (${pct} %). Mejor: ${U.pct(r.best)}.` +
         (pct >= EM.prog.PASS ? ' ✔ Objetivo alcanzado (80 %).' : ' Repasa las explicaciones y vuelve a intentarlo.');
       opts.onScore && opts.onScore(pct);
+      saveAns(true);
       sec.dispatchEvent(new CustomEvent('ex-scored', { bubbles: true, detail: { id: block.id, pct, state: state.slice() } }));
     }
 
-    checkBtn.onclick = () => {
+    // Respuestas guardadas: se restauran al volver a abrir la página (aunque se cierre el navegador).
+    function saveAns(checked) {
+      S().data.ans[block.id] = { v: ctrls.map((c) => c.raw()), checked: !!checked, state: state ? state.slice() : null };
+      S().save();
+    }
+
+    /** Corrige y muestra el resultado. restored: estado guardado (no se vuelve a registrar). */
+    function grade(restored) {
       const vals = ctrls.map((c) => c.get());
-      const empty = vals.filter((v) => v == null || v === '').length;
-      if (empty === vals.length) {
-        result.textContent = 'Responde al menos un ítem antes de comprobar.';
-        return;
-      }
       state = ctrls.map((c, i) => {
         const v = vals[i];
-        const ok = v != null && v !== '' && c.check(v);
+        const ok = restored ? !!restored[i] : v != null && v !== '' && c.check(v);
         const it = block.items[i];
         c.lock(true);
         c.li.classList.toggle('is-ok', ok);
@@ -210,7 +228,7 @@
               }, 'Mi respuesta también es válida')
             : null
         );
-        if (!ok && v != null && v !== '') {
+        if (!restored && !ok && v != null && v !== '') {
           S().addError({
             key: `${block.id}-i${i}`,
             prompt: String(it.q || (it.w ? it.w.join(' / ') : '')).replace(/<[^>]+>/g, ''),
@@ -225,6 +243,14 @@
       checkBtn.hidden = true;
       retryBtn.hidden = false;
       solBtn.hidden = false;
+    }
+    checkBtn.onclick = () => {
+      const vals = ctrls.map((c) => c.get());
+      if (vals.every((v) => v == null || v === '')) {
+        result.textContent = 'Responde al menos un ítem antes de comprobar.';
+        return;
+      }
+      grade(null);
       finish(false);
     };
     retryBtn.onclick = () => {
@@ -235,6 +261,7 @@
         c.fb.replaceChildren();
       });
       state = null;
+      saveAns(false);
       checkBtn.hidden = false;
       retryBtn.hidden = true;
       solBtn.hidden = true;
@@ -251,6 +278,22 @@
     };
 
     sec.append(h('div', { class: 'row wrap ex-actions' }, checkBtn, retryBtn, solBtn), result);
+
+    // Restaurar respuestas previas (comprobadas o a medio responder).
+    const saved = S().data.ans[block.id];
+    if (saved && Array.isArray(saved.v)) {
+      ctrls.forEach((c, i) => c.set(saved.v[i]));
+      if (saved.checked && Array.isArray(saved.state)) {
+        grade(saved.state);
+        const ok = state.filter(Boolean).length;
+        result.textContent = `Resultado: ${ok}/${state.length} (${score()} %).` + (prev ? ` Mejor: ${U.pct(prev.best)} · intentos: ${prev.attempts}.` : '');
+      }
+    }
+    // Guardar lo que se va respondiendo antes de comprobar.
+    const saveDraft = U.debounce(() => { if (!state) saveAns(false); }, 400);
+    sec.addEventListener('input', saveDraft);
+    sec.addEventListener('change', saveDraft);
+    sec.addEventListener('click', (e) => { if (e.target.closest('.tile')) saveDraft(); });
     return sec;
   };
 
