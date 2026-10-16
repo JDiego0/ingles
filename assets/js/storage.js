@@ -23,6 +23,7 @@
       },
       lessons: {}, // lessonId -> { visited, completed, speakDone }
       ex: {}, // exerciseId -> { best, last, attempts, date, skill, self }
+      fold: {}, // página|sección -> 1 si está recogida
       ans: {}, // exerciseId -> { v: respuestas, checked, state } (para restaurarlas al volver)
       assess: {}, // moduleId | 'stage-N' -> { best, passed, attempts: [] }
       rubrics: {}, // taskId -> { scores, pct, date, kind }

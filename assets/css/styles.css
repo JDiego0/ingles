@@ -1410,3 +1410,36 @@ fieldset.mc legend {
   gap: 8px;
   margin-bottom: 6px;
 }
+
+/* Secciones desplegables */
+.fold-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.fold-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+.fold-ico {
+  margin-left: auto;
+  flex: none;
+  font-size: 1.1em;
+  color: var(--muted);
+  transition: transform 0.15s;
+}
+.folded .fold-ico {
+  transform: rotate(-90deg);
+}
+.lsec.folded > :not(h2),
+.stage.folded > :not(h2) {
+  display: none;
+}
+.lsec.folded > h2 {
+  margin-bottom: 0.2em;
+}

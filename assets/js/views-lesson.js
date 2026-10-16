@@ -262,7 +262,7 @@
     // Índice de secciones (navegación rápida en móvil)
     root.append(
       h('nav', { class: 'toc', 'aria-label': 'Secciones de la lección' },
-        toc.map(([id, letter, title]) => h('a', { href: '#', class: 'toc-a', onclick: (e) => { e.preventDefault(); const t = document.getElementById(id); t && t.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }, title }, letter === '+' ? 'R' : letter))
+        toc.map(([id, letter, title]) => h('a', { href: '#', class: 'toc-a', onclick: (e) => { e.preventDefault(); const t = document.getElementById(id); t && t._unfold && t._unfold(); t && t.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }, title }, letter === '+' ? 'R' : letter))
       ),
       ...parts
     );

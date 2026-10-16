@@ -30,6 +30,30 @@
   const main = () => document.getElementById('main');
   let routing = 0;
 
+  /** Secciones desplegables: el título abre o recoge la sección y el estado
+      se guarda (por página) para conservarlo al cerrar el navegador. */
+  function folds(root, page) {
+    const store = EM.store.data.fold || (EM.store.data.fold = {});
+    root.querySelectorAll('section.lsec, section.stage').forEach((s, i) => {
+      const h2 = s.querySelector(':scope > h2');
+      if (!h2) return;
+      const key = page + '|' + (s.id || h2.textContent.trim() || i);
+      const btn = h('button', { type: 'button', class: 'fold-btn', 'aria-expanded': 'true' }, ...h2.childNodes, h('span', { class: 'fold-ico', 'aria-hidden': 'true' }, '▾'));
+      h2.replaceChildren(btn);
+      const set = (folded, save) => {
+        s.classList.toggle('folded', folded);
+        btn.setAttribute('aria-expanded', String(!folded));
+        if (!save) return;
+        if (folded) store[key] = 1;
+        else delete store[key];
+        EM.store.save();
+      };
+      s._unfold = () => s.classList.contains('folded') && set(false, true);
+      btn.onclick = () => set(!s.classList.contains('folded'), true);
+      if (store[key]) set(true, false);
+    });
+  }
+
   EM.route = async function route() {
     const my = ++routing;
     const raw = location.hash.replace(/^#\/?/, '');
@@ -52,6 +76,7 @@
     }
     if (my !== routing) return; // otra navegación más reciente
     m.replaceChildren(node);
+    folds(m, raw);
     m.removeAttribute('aria-busy');
     // Navegación activa
     const section = ['', 'path', 'review', 'vocab'].includes(name) ? name : ['module', 'lesson', 'consol', 'assess', 'stage'].includes(name) ? 'path' : 'more';
